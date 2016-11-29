@@ -10,10 +10,10 @@ addpath('../')
 % Portal Data Set Options
 S2US = 1e6;
 US2S = 1e-6;
-%ieegUser = 'akhambhati';
-%ieegPwd = 'akh_ieeglogin.bin';
-ieegUser = 'hoameng';
-ieegPwd = 'hoa_ieeglogin.bin';
+fid = fopen('ieegUsrFile.csv');
+ieegUsrFile = textscan(fid, '%s%s\n', 1, 'delimiter',',');
+ieegUser = ieegUsrFile{1}{1};
+ieegPwd = ieegUsrFile{2}{1};
 snapshotName = 'I004_A0003_D001';
 snapTrainPrefix = '-TrainingAnnots';
 trainAnnLayerName = 'Train';
