@@ -14,12 +14,13 @@ addpath(genpath('../'))
 % This creates a .bin file that contains your login (unencrypted)
 IEEGSession.createPwdFile('username','password')
 
+%% ENTER OWN USERNAME AND PASSWORD FILE HERE
+ieegUser = 'hoameng';
+ieegPwd = 'hoa_ieeglogin.bin';
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%
 % First, create an IEEGSession object, which is a Matlab class. This contains your login credentials a well as a dataset that you'd like to open.
-fid = fopen('ieegUsrFile.csv');
-ieegUsrFile = textscan(fid, '%s%s\n', 1, 'delimiter',',');
-ieegUser = ieegUsrFile{1}{1};
-ieegPwd = ieegUsrFile{2}{1};
 session = IEEGSession('I004_A0003_D001',ieegUser,ieegPwd);
 % note that many datasets follow the nomenclature of I*A/P*D, where 'I' indicates the institution id, 'A/P' indicates animal or patient, and 'D' indicates dataset number.
 

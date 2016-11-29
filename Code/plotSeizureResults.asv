@@ -7,15 +7,16 @@ addpath(genpath('../Tools/ieeg-matlab-1.13.2'));
 addpath(genpath('../Tools/portal-matlab-tools/'));
 addpath('../')
 
-%% ENTER OWN USERNAME AND PASSWORD FILE HERE
 ieegUser = 'hoameng';
-ieegPwd = 'hoa_ieeglogin.bin';
+ieegPwd = 'hoa_ieeglog
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%
+
 % Portal Data Set Options
 S2US = 1e6;
 US2S = 1e-6;
+fid = fopen('ieegUsrFile.csv');
+;
+
 snapshotName = 'I004_A0003_D001';
 snapTrainPrefix = '-TrainingAnnots';
 trainAnnLayerName = 'Train';

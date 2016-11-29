@@ -7,17 +7,19 @@
 clear; clc;
 addpath(genpath('../'))
 
+%% ENTER OWN USERNAME AND PASSWORD FILE HERE
+ieegUser = 'hoameng';
+ieegPwd = 'hoa_ieeglogin.bin';
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %% Portal Data Set Options
 %
 % Empty space to configure IEEG Account Login, IEEG Snapshot, Time Conversion Constants
 %
 S2US = 1e6;
 US2S = 1e-6;
-fid = fopen('ieegUsrFile.csv');
-ieegUsrFile = textscan(fid, '%s%s\n', 1, 'delimiter',',');
-ieegUser = ieegUsrFile{1}{1};
-ieegPwd = ieegUsrFile{2}{1};
-ieegPwd = strrep(ieegPwd,'\n','');
+
 snapshotName = 'I004_A0003_D001';
 snapTrainPrefix = '-TrainingAnnots';
 trainAnnLayerName = 'Train';
