@@ -7,9 +7,13 @@
 clear; clc;
 addpath(genpath('../'))
 
+% Once you've signed up and have been approved on the ieeg.org website, you can establish a key that will give you access permissions to connect to our server and interact with datasets'
+% This creates a .bin file that contains your login (unencrypted)
+% IEEGSession.createPwdFile('username','password')
+
 %% ENTER OWN USERNAME AND PASSWORD FILE HERE
 ieegUser = 'hoameng';
-ieegPwd = 'hoa_ieeglogin.bin';
+ieegPwd = 'hoa_ieeglogin.bin'; %created bin file
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -190,5 +194,5 @@ end
 seizures = allAnnUsec(predLabel(:,1) == 2, :);
 channels = allAnnChans(predLabel(:,1)== 2)';
 layerName = ieegUser;
-uploadAnnotations(dataset,layerName,seizures,channels,'seizure','overwrite');
+uploadAnnotations(dataset,layerName,seizures,channels,layerName,'overwrite');
 
