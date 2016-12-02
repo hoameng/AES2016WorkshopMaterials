@@ -112,11 +112,12 @@ catch
            trainLabel(i, 1) = 2;
        end
     end
-
+    
+    %collapse into matrix
     featMatr = cell2mat(featMatr);
-    %remove any examples with NaN features
     save(featuresavename,'featMatr','trainLabel');
 end
+%remove any examples with NaN features
 [r c] = find(isnan(featMatr));
 r = unique(r);
 featMatr(r,:) = [];
