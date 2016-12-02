@@ -39,6 +39,7 @@ layerNames(idxToRemove) = [];
 annotTimes = cell(numel(layerNames),1);
 annotObjs = cell(numel(layerNames),1);
 for i = 1:numel(layerNames)
+    fprintf('Pulling %s annotation layer... \n',layerNames{i});
     % Locate annotations in prescribed layer
     [annotObjs{i},annotTimes{i},~] = getAnnotations(dataset, layerNames{i});
 end

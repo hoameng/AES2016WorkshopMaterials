@@ -22,8 +22,6 @@ ieegPwd = 'hoa_ieeglogin.bin'; %created bin file
 % 2: Time,freq correlations and Random Forest (Kaggle)
 modelOption = 1;
 
-
-
 %% Portal Data Set Options
 S2US = 1e6;
 US2S = 1e-6;
