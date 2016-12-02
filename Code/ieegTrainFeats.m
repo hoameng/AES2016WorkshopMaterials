@@ -17,15 +17,12 @@ ieegPwd = 'hoa_ieeglogin.bin'; %created bin file
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% FEATURE OPTIONS: 
-% 1: Line Length
-% 2: Correlations and frequency correlations (Kaggle winning features)
-featureOption = 1;
+%OPTIONS: 
+% 1: Line Length and Logistic Regression
+% 2: Time,freq correlations and Random Forest (Kaggle)
+modelOption = 1;
 
-%% CLASSIFIER OPTIONS
-% 1: Logistic Regression
-% 2: Random Forest
-classifierOption = 1;
+
 
 %% Portal Data Set Options
 S2US = 1e6;
@@ -40,7 +37,7 @@ layerAppend = ''; %appending to uploaded annotation layer name depending on opti
 
 
 %% Assign Feature Function
-switch featureOption
+switch modelOption
     case 1
         featFn = @feat_LineLength;
         layerAppend = [layerAppend '-LL'];
@@ -127,7 +124,7 @@ trainLabel(r) = [];
 % With clip interictal/ictal labels and feature set, train ML algorithm
 % Check if model already computed. If not, recompute.
 %
-switch classifierOption
+switch modelOption
     case 1
         % Logistic Regression
         fprintf('\nTraining Logistic Regression\n')
@@ -169,6 +166,7 @@ end
 % Insert code to instantiate an IEEG Session pointing testing data snapshot
 % You may append the snapshot to the current session, rather than restarting the session
 %
+
 testSnapName = strcat(snapshotName, snapTestPrefix);
 session.openDataSet(testSnapName);
 
