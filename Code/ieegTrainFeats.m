@@ -215,12 +215,12 @@ for i = 1:numel(allAnn)
        switch classifierOption
            case 1
                % Predict using logistic regression
-               phat = mnrval(model, feat);
-               [~, predLabel(i, 1)] = max(phat);
+               yhat = mnrval(model, feat);
+               [~, predLabel(i, 1)] = max(yhat);
            case 2
                % Predict using random forest
-               phat = predict(model,feat);
-               predLabel(i,1) = str2num(phat{1});
+               yhat = predict(model,feat);
+               predLabel(i,1) = str2num(yhat{1});
        end
    end
    
