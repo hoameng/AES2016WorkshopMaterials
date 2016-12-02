@@ -29,7 +29,7 @@ featureOption = 1;
 % 1: Logistic Regression
 % 2: Random Forest
 
-classifierOption = 1;
+classifierOption = 2;
 
 %% Portal Data Set Options
 %
@@ -95,7 +95,7 @@ trainLabel = zeros(numel(allAnn), 1);
 featuresavename = ['featMatr' layerAppend '.mat'];
 try
     fprintf('Loading %s...\n',featuresavename);
-    load(featuresavename,'featMatr','trainLabel');
+    load(featuresavename,'featMatr');
 catch
     fprintf('%s does not exist, recalculating....\n',featuresavename);
     for i = 1:numel(allAnn)
@@ -120,7 +120,7 @@ catch
 
     featMatr = cell2mat(featMatr);
     %remove any examples with NaN features
-    save(featuresavename,'featMatr','trainLabel');
+    save(featuresavename,'featMatr');
 end
 [r c] = find(isnan(featMatr));
 r = unique(r);
@@ -205,7 +205,7 @@ for i = 1:numel(allAnn)
        switch classifierOption
            case 1
                % Predict logistic regression
-               phat = mnrval(model, feat);
+               phat = mnrval(B, feat);
                [~, predLabel(i, 1)] = max(phat);
            case 2
                phat = predict(model,feat);
