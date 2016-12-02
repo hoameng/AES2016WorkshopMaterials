@@ -1,4 +1,5 @@
 *.bin
 *.pptx
 *.mat
+detect_seizures.m
 ieeg*.csv

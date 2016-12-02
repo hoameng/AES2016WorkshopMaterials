@@ -147,11 +147,11 @@ switch classifierOption
             load(modelsavename,'model');
         catch
             fprintf('%s does not exist, recalculating....\n',modelsavename);
-            model = TreeBagger(300,featMatr, trainLabel,'Method','Classification','OOBPrediction','on','OOBPredictorImportance','on');
+            model = TreeBagger(300,featMatr, trainLabel,'Method','Classification');
             save(modelsavename,'model');
         end
-        [yhat,scores] = oobPredict(model);
-        [conf, classorder] = confusionmat(categorical(trainLabel), categorical(yhat));
+        %[yhat,scores] = oobPredict(model);
+        %[conf, classorder] = confusionmat(categorical(trainLabel), categorical(yhat));
 end
 
 
