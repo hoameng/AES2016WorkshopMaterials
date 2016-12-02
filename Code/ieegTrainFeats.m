@@ -27,8 +27,7 @@ featureOption = 2;
 
 %% CLASSIFIER OPTIONS
 % 1: Logistic Regression
-% 2: Logistic Regression with Elastic Net
-% 3: Random Forest
+% 2: Random Forest
 
 classifierOption = 2;
 
@@ -53,7 +52,6 @@ switch featureOption
     case 2
         featFn = @feat_freqcorr;
         layerAppend = [layerAppend '-FC'];
-
 end
 
 %% Grab training snapshot, extract features, train model
@@ -137,7 +135,7 @@ switch classifierOption
         layerAppend = [layerAppend '-RF'];
 
         [yhat,scores] = oobPredict(model);
-        [conf, classorder] = confusionmat(categorical(trainLabel), categorical(yhat))
+        [conf, classorder] = confusionmat(categorical(trainLabel), categorical(yhat));
 end
 
 
