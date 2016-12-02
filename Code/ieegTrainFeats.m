@@ -207,7 +207,7 @@ for i = 1:numel(allAnn)
    % Compute features
    feat = featFn(annData,fs);
    if ~(any(isnan(feat)))
-       switch classifierOption
+       switch modelOption
            case 1
                % Predict using logistic regression
                yhat = mnrval(model, feat);
