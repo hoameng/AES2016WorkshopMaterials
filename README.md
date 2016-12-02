@@ -1,5 +1,7 @@
 # Welcome to the AES 2016 workshop on EEG Analysis and Seizure Detection!<br />
 Please clone the repository or download the entire zip file before the workshop (clone/download -> download zip)<br />
+
+Sign up for an account at http://main.ieeg.org. Put "AES2016" in the "Data Use" field. For institutional contact, is it OK to put your own contact information. <br />
 Included files:<br />
 
 Code/<br />
