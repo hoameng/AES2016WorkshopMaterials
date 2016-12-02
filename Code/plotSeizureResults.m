@@ -1,6 +1,5 @@
 %%% Script to clip interictal, preictal, ictal segments from Dog Dataset
 %%% from IEEG Portal 
-%%% Note: this will not be shown to course; internal use only
 
 clear; clc;
 addpath(genpath('../Tools/ieeg-matlab-1.13.2'));
