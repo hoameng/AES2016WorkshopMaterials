@@ -31,10 +31,7 @@ session = IEEGSession(testSnapName, ieegUser, ieegPwd);
 dataset = session.data;
 
 layerNames = {dataset.annLayer(:).name};
-
-%remove Seizures layer from display
-idxToRemove = find(cell2mat(cellfun(@(x)strcmp(x,'Seizures'),layerNames,'UniformOutput',0))==1);
-layerNames(idxToRemove) = [];
+idxToRemove = cellfun(@(x)strcmp(x,'Seizures'),layerNames,'UniformOutput',0);
 
 % Create a matrix
 annotTimes = cell(numel(layerNames),1);

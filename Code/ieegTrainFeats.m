@@ -17,32 +17,28 @@ ieegPwd = 'hoa_ieeglogin.bin'; %created bin file
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-layerAppend = '';
-
 %% FEATURE OPTIONS: 
-% 1: 'linelength'
-% 2: 'freqcorr'
-
+% 1: Line Length
+% 2: Correlations and frequency correlations (Kaggle winning features)
 featureOption = 1;
 
 %% CLASSIFIER OPTIONS
 % 1: Logistic Regression
 % 2: Random Forest
-
 classifierOption = 1;
 
+
 %% Portal Data Set Options
-%
-% Empty space to configure IEEG Account Login, IEEG Snapshot, Time Conversion Constants
-%
 S2US = 1e6;
 US2S = 1e-6;
-
 snapshotName = 'I004_A0003_D001';
 snapTrainPrefix = '-TrainingAnnots';
 trainAnnLayerName = 'Train';
 snapTestPrefix = '-TestingAnnots';
 testAnnLayerName = 'Test';
+
+layerAppend = ''; %appending to uploaded annotation layer name depending on options
+
 
 %% Assign Feature Function
 switch featureOption
@@ -56,17 +52,17 @@ end
 
 %% Grab training snapshot, extract features, train model
 %
-% Insert code to instantiate an IEEG Session pointing training data snapshot
+% Code to instantiate an IEEG Session pointing training data snapshot
 %
 trainSnapName = strcat(snapshotName, snapTrainPrefix);
 session = IEEGSession(trainSnapName, ieegUser, ieegPwd);
 dataset = session.data;
 
 %
-% Insert code to Retrieve dataset sampling frequency, signal length, channel indices
+% Code to retrieve dataset sampling frequency, signal length, channel indices
 %
 fs = dataset.sampleRate;
-dsDurSn = dataset.rawChannels(1).get_tsdetails.getDuration * US2S * fs;
+dsDurSn = dataset.rawChannels(1).get_tsdetails.getDuration * US2S * fs; %conversion since all times from ieeg.org are in usec
 dsDurSn = floor(dsDurSn);
 channelsIdx = 1:numel(dataset.rawChannels);
 
@@ -92,6 +88,7 @@ trainLabel = zeros(numel(allAnn), 1);
 %        (We use type 'NSZ' for interictal and 'SZ' for ictal)
 %
 
+% Check if feature matrix already computed. If not, recompute.
 featuresavename = ['featMatr' layerAppend '.mat'];
 try
     fprintf('Loading %s...\n',featuresavename);
@@ -129,13 +126,22 @@ trainLabel(r) = [];
 
 %
 % With clip interictal/ictal labels and feature set, train ML algorithm
+% Check if model already computed. If not, recompute.
 %
 switch classifierOption
     case 1
         % Logistic Regression
         fprintf('\nTraining Logistic Regression\n')
-        model = mnrfit(featMatr, trainLabel);
         layerAppend = [layerAppend '-LR'];
+        modelsavename = ['LRModel' layerAppend];
+        try
+            fprintf('Loading %s...\n',modelsavename);
+            load(modelsavename,'model');
+        catch
+            fprintf('%s does not exist, recalculating....\n',modelsavename);
+            model = mnrfit(featMatr, trainLabel);
+            save(modelsavename,'model');
+        end
 
     case 2
         % Random Forest
@@ -147,9 +153,13 @@ switch classifierOption
             load(modelsavename,'model');
         catch
             fprintf('%s does not exist, recalculating....\n',modelsavename);
+            %Syntax for TreeBagger may be different depending on
+            %MATLAB version
             model = TreeBagger(300,featMatr, trainLabel,'Method','Classification');
             save(modelsavename,'model');
         end
+        
+        % Options for assessing performance of TreeBagger
         %[yhat,scores] = oobPredict(model);
         %[conf, classorder] = confusionmat(categorical(trainLabel), categorical(yhat));
 end
@@ -164,7 +174,7 @@ testSnapName = strcat(snapshotName, snapTestPrefix);
 session.openDataSet(testSnapName);
 
 %
-% Insert code to Retrieve dataset sampling frequency, signal length, channel indices
+% Insert code to retrieve dataset sampling frequency, signal length, channel indices
 %
 dataset = session.data(2);
 Fs = dataset.sampleRate;
@@ -204,10 +214,11 @@ for i = 1:numel(allAnn)
    if ~(any(isnan(feat)))
        switch classifierOption
            case 1
-               % Predict logistic regression
+               % Predict using logistic regression
                phat = mnrval(model, feat);
                [~, predLabel(i, 1)] = max(phat);
            case 2
+               % Predict using random forest
                phat = predict(model,feat);
                predLabel(i,1) = str2num(phat{1});
        end
