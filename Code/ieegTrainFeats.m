@@ -27,7 +27,6 @@ featureOption = 1;
 % 2: Random Forest
 classifierOption = 1;
 
-
 %% Portal Data Set Options
 S2US = 1e6;
 US2S = 1e-6;
@@ -62,8 +61,7 @@ dataset = session.data;
 % Code to retrieve dataset sampling frequency, signal length, channel indices
 %
 fs = dataset.sampleRate;
-dsDurSn = dataset.rawChannels(1).get_tsdetails.getDuration * US2S * fs; %conversion since all times from ieeg.org are in usec
-dsDurSn = floor(dsDurSn);
+dsDurSn = dataset.rawChannels(1).get_tsdetails.getDuration * US2S /86400; %conversion since all times from ieeg.org are in usec
 channelsIdx = 1:numel(dataset.rawChannels);
 
 %
@@ -178,8 +176,6 @@ session.openDataSet(testSnapName);
 %
 dataset = session.data(2);
 Fs = dataset.sampleRate;
-dsDurSn = dataset.rawChannels(1).get_tsdetails.getDuration * US2S * fs;
-dsDurSn = floor(dsDurSn);
 channelsIdx = 1:numel(dataset.rawChannels);
 
 %
