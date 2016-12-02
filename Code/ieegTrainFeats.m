@@ -227,7 +227,7 @@ end
 % Also, retrieve the channels on which the prediction occurred (in our case all channels)
 % Use the uploadAnnotations tool to
 %    1. Create an annotation layer with the same name as your ieegUser name
-%    2. Post seizure annotations with the annotation type: 'seizure'
+%    2. Post seizure annotations
 %
 seizures = allAnnUsec(predLabel(:,1) == 2, :);
 channels = allAnnChans(predLabel(:,1)== 2)';
