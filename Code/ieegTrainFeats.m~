@@ -17,8 +17,6 @@ ieegPwd = 'hoa_ieeglogin.bin'; %created bin file
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-layerAppend = '';
-
 %% FEATURE OPTIONS: 
 % 1: 'linelength'
 % 2: 'freqcorr'
@@ -49,11 +47,8 @@ testAnnLayerName = 'Test';
 switch featureOption
     case 1
         featFn = @feat_LineLength;
-        layerAppend = [layerAppend '-LL'];
     case 2
         featFn = @feat_freqcorr;
-        layerAppend = [layerAppend '-FC'];
-
 end
 
 %% Grab training snapshot, extract features, train model
@@ -128,13 +123,10 @@ switch classifierOption
         % Logistic Regression
         fprintf('\nTraining Logistic Regression\n')
         model = mnrfit(featMatr, trainLabel);
-        layerAppend = [layerAppend '-LR'];
-
     case 2
         % Random Forest
         fprintf('\nTraining Random Forest\n')
         model = TreeBagger(3000,featMatr, trainLabel,'Method','Classification','OOBPrediction','on','OOBPredictorImportance','on');
-        layerAppend = [layerAppend '-RF'];
 
         [yhat,scores] = oobPredict(model);
         [conf, classorder] = confusionmat(categorical(trainLabel), categorical(yhat))
@@ -217,6 +209,6 @@ end
 %
 seizures = allAnnUsec(predLabel(:,1) == 2, :);
 channels = allAnnChans(predLabel(:,1)== 2)';
-layerName = [ieegUser layerAppend];
+layerName = [ieegUser];
 uploadAnnotations(dataset,layerName,seizures,channels,layerName,'overwrite');
 
