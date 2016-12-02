@@ -91,28 +91,37 @@ trainLabel = zeros(numel(allAnn), 1);
 %        (Clip label is stored as an annotation type for a given annotation layer)
 %        (We use type 'NSZ' for interictal and 'SZ' for ictal)
 %
-for i = 1:numel(allAnn)
-   fprintf('Features from clip %d of %d\n', i, numel(allAnn))
 
-   % Get values for each
-   snRange = allAnn(i).start * US2S * fs : allAnn(i).stop * US2S * fs;
-   annData = getExtendedData(dataset, snRange, channelsIdx);
+featuresavename = ['featMatr' layerAppend '.mat'];
+try
+    fprintf('Loading %s...\n',featuresavename);
+    load(featuresavename,'featMatr');
+catch
+    fprintf('%s does not exist, recalculating....\n',featuresavename);
+    for i = 1:numel(allAnn)
+       fprintf('Features from clip %d of %d\n', i, numel(allAnn))
 
-   % Compute features and add to feature matrix
-   feat = featFn(annData,fs);
-   featMatr{i} = feat;
+       % Get values for each
+       snRange = allAnn(i).start * US2S * fs : allAnn(i).stop * US2S * fs;
+       annData = getExtendedData(dataset, snRange, channelsIdx);
 
-   % Save label for each
-   if strcmp(allAnn(i).type, 'NSZ')
-       trainLabel(i, 1) = 1;
-   end
-   if strcmp(allAnn(i).type, 'SZ')
-       trainLabel(i, 1) = 2;
-   end
+       % Compute features and add to feature matrix
+       feat = featFn(annData,fs);
+       featMatr{i} = feat;
+
+       % Save label for each
+       if strcmp(allAnn(i).type, 'NSZ')
+           trainLabel(i, 1) = 1;
+       end
+       if strcmp(allAnn(i).type, 'SZ')
+           trainLabel(i, 1) = 2;
+       end
+    end
+
+    featMatr = cell2mat(featMatr);
+    %remove any examples with NaN features
+    save(featuresavename,'featMatr');
 end
-
-featMatr = cell2mat(featMatr);
-%remove any examples with NaN features
 [r c] = find(isnan(featMatr));
 r = unique(r);
 featMatr(r,:) = [];
@@ -131,9 +140,16 @@ switch classifierOption
     case 2
         % Random Forest
         fprintf('\nTraining Random Forest\n')
-        model = TreeBagger(3000,featMatr, trainLabel,'Method','Classification','OOBPrediction','on','OOBPredictorImportance','on');
         layerAppend = [layerAppend '-RF'];
-
+        modelsavename = ['RFModel' layerAppend];
+        try
+            fprintf('Loading %s...\n',modelsavename);
+            load(modelsavename,'model');
+        catch
+            fprintf('%s does not exist, recalculating....\n',modelsavename);
+            model = TreeBagger(300,featMatr, trainLabel,'Method','Classification','OOBPrediction','on','OOBPredictorImportance','on');
+            save(modelsavename,'model');
+        end
         [yhat,scores] = oobPredict(model);
         [conf, classorder] = confusionmat(categorical(trainLabel), categorical(yhat));
 end
@@ -185,16 +201,16 @@ for i = 1:numel(allAnn)
 
    % Compute features
    feat = featFn(annData,fs);
-
-   switch classifierOption
-       case 1
-           % Predict logistic regression
-           phat = mnrval(B, feat);
-           [~, predLabel(i, 1)] = max(phat);
-   
-       case 3
-           phat = predict(model,feat);
-           predLabel(i,1) = str2num(phat{1});
+   if ~(any(isnan(feat)))
+       switch classifierOption
+           case 1
+               % Predict logistic regression
+               phat = mnrval(B, feat);
+               [~, predLabel(i, 1)] = max(phat);
+           case 2
+               phat = predict(model,feat);
+               predLabel(i,1) = str2num(phat{1});
+       end
    end
    
    if(predLabel(i,1) == 2)
