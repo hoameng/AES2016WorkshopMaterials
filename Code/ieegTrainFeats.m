@@ -1,5 +1,5 @@
 %% Script to clip interictal, preictal, ictal segments from Dog Dataset
-% from IEEG Portal 
+% from IEEG Portal
 % Note: This is a demonstration of real-time seizure detection, operating on one window at a time.
 % Computational efficiency can be improved by batching feature extraction
 % and classification
