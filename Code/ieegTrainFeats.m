@@ -3,6 +3,10 @@
 % Note: This is a demonstration of real-time seizure detection, operating on one window at a time.
 % Computational efficiency can be improved by batching feature extraction
 % and classification
+%
+% Hoameng Ung
+% hoameng.ung@gmail.com
+% University of Pennsylvania
 
 clear; clc;
 addpath(genpath('../'))

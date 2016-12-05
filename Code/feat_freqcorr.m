@@ -1,5 +1,12 @@
-
 function feats = feat_freqcorr(data, fs)
+%% Function will extract three sets of features
+% 1. Power magnitudes from 1-47 Hz
+% 2. Time correlations and eigenvalues
+% 3. Frequency correlations and eigenvalues
+
+% Written by Hoameng Ung, based on 2014 winning Kaggle Solutions
+% hoameng.ung@gmail.com
+% University of Pennsylvania
 
     if ~any(any(isnan(data))) 
         %fft magnitudes from 1-47Hz
